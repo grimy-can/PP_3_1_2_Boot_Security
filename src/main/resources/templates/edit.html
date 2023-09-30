@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+        <head>
+        <meta charset="UTF-8">
+        <title>Изменить пользователя</title>
+</head>
+<style>
+    ::placeholder{
+        color: coral;
+    }
+</style>
+<body>
+<form th:method="POST" th:action="'update?id='+${user.getId()}" th:object="${user}">
+    <div>
+        <input type="text" name="name" th:value="${user.getName()}" th:required="required">
+    </div>
+    <div>
+        <input type="text" name="lastName" th:value="${user.getLastName()}" th:required="required">
+    </div>
+    <div>
+        <input type="text" name="age" th:value="${user.getAge()}" th:required="required">
+    </div>
+    <div>
+        <input type="text" name="alias" th:value="${user.getAlias()}" th:required="required">
+    </div>
+    <div>
+        <input type="text" name="occupation" th:value="${user.getOccupation()}" th:required="required">
+    </div>
+    <div>
+        <input type="text" name="regdate" th:value="${user.getRegdate()}" th:required="required" readonly>
+    </div>
+    <div>
+        <label>В живых: </label>
+        <input type="checkbox" th:field="*{isAlive}" id="isAlive">
+    </div>
+    <br>
+    <hr><input type="submit" value="Сохранить">
+</form>
+<hr>
+<a href="/users">
+    <button class="button">Отмена</button>
+</a>
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>

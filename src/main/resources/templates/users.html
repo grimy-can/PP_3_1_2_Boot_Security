@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<style>
+    table {
+        border-collapse: collapse;
+        background-color: lemonchiffon;
+    }
+    th, td {
+        border: 1px solid orange;
+        padding: 10px;
+        text-align: left;
+    }
+    .button {
+        background-color: black;
+        color: lemonchiffon;
+        font-size: 16px;
+    }
+</style>
+
+<body>
+<h2>База данных пользователей:</h2>
+<hr>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">Имя и фамилия</th>
+        <th scope="col">Возраст</th>
+        <th scope="col">Псевдоним</th>
+        <th scope="col">Род занятий</th>
+        <th scope="col">Зарегистрирован</th>
+        <th scope="col">В живых</th>
+        <th scope="col">Изменение</th>
+        <th scope="col">Удаление</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:block th:each="user : ${users}">
+        <th th:text="${user.getId()}" scope="row"></th>
+        <td> <a th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user.getName()}+ ' ' +${user.getLastName()}"></a></td>
+        <td th:text="${user.getAge()}"></td>
+        <td th:text="${user.getAlias()}"></td>
+        <td th:text="${user.getOccupation()}"></td>
+        <td th:text="${user.getRegdate()}"></td>
+        <td th:text="${user.getIsAlive()}"></td>
+        <td> <form th:action="'edit_user?id=' + ${user.getId()}" th:method="POST">
+            <input type="submit" value="Изменить" />
+        </form></td>
+        <td> <form th:action="'del_user?id=' + ${user.getId()}" th:method="POST">
+            <input type="submit" value="Удалить" />
+        </form></td>
+    </tr>
+    </tbody>
+</table>
+<hr>
+<a href="/new">
+    <button class="button">Новый пользователь</button>
+</a>
+</body>

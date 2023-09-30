@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<meta charset="UTF-8">
+<body style="background-color: #1C1C1C;">
 <head>
-    <title>Spring Security Example</title>
+    <title>Пользователь</title>
 </head>
-<body>
-<h1>User, welcome spring boot security page!</h1>
-
-
+<span style="color: #E0FFFF">
+<h2><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></h2>
+        <h4><p th:text="'Логин: ' + ${user.getLogin()}">VALUE</p></h4>
+        <h4><p th:text="'Пароль: ' + ${user.getPassword()}">VALUE</p></h4>
+        <h4><p th:text="'Возраст: ' + ${user.getAge()}">VALUE</p></h4>
+        <h4><p th:text="'Псевдоним: ' + ${user.getAlias()}">VALUE</p></h4>
+        <h4><p th:text="'Род занятий: ' + ${user.getOccupation()}">VALUE</p></h4>
+        <h4><p th:text="'В живых: ' + ${user.getIsAlive()}">VALUE</p></h4>
+        <h4><p th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</p></h4>
+        <h4><p th:text="'Изменён: ' + ${user.getEdited()}">VALUE</p></h4>
+        <hr>
+        <form th:action="@{/users}" th:method="GET">
+        <input type="submit" value="Назад" />
+        </form>
+    </span>
 </body>
+
 </html>

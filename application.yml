@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    user.name: admin
+    user.password: 12345
+    user.role: ADMIN
+  datasource:
+    url: jdbc:mysql://localhost:3306/pre_project
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      format_sql: true
+    show-sql: true
+  main:
+    web-application-type: servlet
