@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.controller;
+package ru.kata.spring.boot_security.demo.controllers;
 
 
 import lombok.AllArgsConstructor;
@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping("/")
 public class UserController {
 
     private UserService service;
@@ -37,13 +38,6 @@ public class UserController {
         }
         model.addAttribute("user", optionalUser.get());
         return "user";
-    }
-
-    @GetMapping("/new")
-    public String getNewUserPage(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        return "new";
     }
 
     @PostMapping("/create")

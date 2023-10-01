@@ -26,9 +26,9 @@
 <body>
 <fieldset>
     <legend>Введите данные о пользователе:</legend>
-<form th:method="POST" th:action="@{/create}" th:object="${user}">+
+<form th:method="POST" th:action="@{/create}" th:object="${user}" id="registerForm">+
     <div>
-        <input type="text" name="login" placeholder="Придумайте логин" th:required="required">
+        <input type="text" name="email" placeholder="E-mail" th:required="required">
     </div>
     <div>
         <input type="text" name="password" placeholder="Придумайте пароль" th:required="required">
@@ -43,15 +43,12 @@
         <input type="text" name="age" placeholder="Возраст" th:required="required">
     </div>
     <div>
-        <input type="text" name="alias" placeholder="Псевдоним" th:required="required">
-    </div>
-    <div>
         <input type="text" name="occupation" placeholder="Род занятий" th:required="required">
     </div>
 
     <div>
-        <input type="checkbox" id="isAlive" name="isAlive" checked readonly/>
-        <label for="isAlive">В живых</label>
+        <input type="checkbox" id="haveLicense" name="haveLicense"/>
+        <label for="haveLicense">Есть права</label>
     </div>
     </div>
     <br>

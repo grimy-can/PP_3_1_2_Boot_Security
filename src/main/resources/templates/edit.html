@@ -21,10 +21,13 @@
         <input type="text" name="lastName" th:value="${user.getLastName()}" th:required="required">
     </div>
     <div>
-        <input type="text" name="age" th:value="${user.getAge()}" th:required="required">
+        <input type="text" name="email" th:value="${user.getEmail()}" th:required="required">
     </div>
     <div>
-        <input type="text" name="alias" th:value="${user.getAlias()}" th:required="required">
+        <input type="text" name="password" th:value="${user.getPassword}" th:required="required">
+    </div>
+    <div>
+        <input type="text" name="age" th:value="${user.getAge()}" th:required="required">
     </div>
     <div>
         <input type="text" name="occupation" th:value="${user.getOccupation()}" th:required="required">
@@ -33,8 +36,8 @@
         <input type="text" name="regdate" th:value="${user.getRegdate()}" th:required="required" readonly>
     </div>
     <div>
-        <label>В живых: </label>
-        <input type="checkbox" th:field="*{isAlive}" id="isAlive">
+        <label>Есть права: </label>
+        <input type="checkbox" th:field="*{haveLicense}" id="haveLicense">
     </div>
     <br>
     <hr><input type="submit" value="Сохранить">

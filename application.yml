@@ -2,10 +2,6 @@ server:
   port: 8080
 
 spring:
-  security:
-    user.name: admin
-    user.password: 12345
-    user.role: ADMIN
   datasource:
     url: jdbc:mysql://localhost:3306/pre_project
     username: root
