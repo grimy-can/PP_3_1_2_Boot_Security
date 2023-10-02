@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Java pre-project 3.1.3</title>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<style>
+    .navbar {
+        background-color: green;
+    }
+</style>
+<body>
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">
+                Java pre-project. Практическая задача 3.1.2</a>
+        </div>
+    </div>
+</nav>
+
+<br><br><br><br><br><br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <h1>Страница входа</h1>
+            <form th:action="@{/login}" method="post">
+
+                <!-- error message -->
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">Неправильный логин или пароль</div>
+                </div>
+
+                <!-- logout message -->
+                <div th:if="${param.logout}">
+                    <div class="alert alert-info">
+                        You have been logged out.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Электронная почта</label> :
+                    <input type="text" class="form-control" id="username"
+                           name="username" placeholder="Введите e-mail"
+                           autofocus="autofocus">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>:
+                    <input type="password" id="password" name="password"
+                           class="form-control" placeholder="Введите пароль" />
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <input type="submit" name="login-submit"
+                                   id="login-submit"
+                                   class="form-control btn btn-primary"
+                                   value="Вход" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group">
+                    <span>Новый пользователь?  <a href="/" th:href="@{/registration}">Зарегистрироваться</a></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

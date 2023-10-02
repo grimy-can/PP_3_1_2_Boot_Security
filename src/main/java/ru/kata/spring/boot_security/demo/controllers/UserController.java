@@ -24,11 +24,25 @@ public class UserController {
         return "index";
     }
 
+
     @GetMapping(value = "/users")
     public String getUsers(ModelMap model, @RequestParam(value = "count", required = false ) String number) {
         model.addAttribute("users", service.getUsers());
         return "users";
     }
+
+//    @GetMapping("/new")
+//    public String getNewUserPage(Model model) {
+//        model.addAttribute("user", new User());
+//        model.addAttribute("localDateTime", LocalDateTime.now());
+//        return "new";
+//    }
+//    @PostMapping("/create")
+//    public String createUser(@ModelAttribute("user") User user) {
+//        service.addUser(user);
+//        return "redirect:/users";
+//}
+
 
     @GetMapping("/users/{id}")
     public String getUser(Model model, @PathVariable("id") int id) {
@@ -40,11 +54,6 @@ public class UserController {
         return "user";
     }
 
-    @PostMapping("/create")
-    public String createUser(@ModelAttribute("user") User user) {
-        service.addUser(user);
-        return "redirect:/users";
-    }
 
     @PostMapping("/edit_user")
     public String getEditUserPage(@RequestParam(value = "id") String id, Model model) {

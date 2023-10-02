@@ -3,20 +3,17 @@ package ru.kata.spring.boot_security.demo.model;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 public class RegistrationForm {
 
-    @Size(min=2, max=30)
+    @Size(min=2, max=64)
     @NotEmpty(message = "Обязательное поле")
     private String email;
 
     @Size(min=8, max=32)
-    @NotEmpty(message = "Обязательное поле")
+    @NotEmpty(message = "Минимум 8, максимум 32 знака")
     private String password;
 
     @NotEmpty(message = "Обязательное поле")
@@ -25,6 +22,7 @@ public class RegistrationForm {
     @NotEmpty(message = "Обязательное поле")
     private String lastName;
 
+    @NotNull
     @Min(value = 18, message = "18+")
     @Digits(integer=3, fraction=0, message = "Не более 3-х знаков")
     private int age;
