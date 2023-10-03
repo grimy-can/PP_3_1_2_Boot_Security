@@ -30,7 +30,6 @@
         <th scope="col">id</th>
         <th scope="col">Имя и фамилия</th>
         <th scope="col">Возраст</th>
-        <th scope="col">Род занятий</th>
         <th scope="col">Зарегистрирован</th>
         <th scope="col">Есть права</th>
         <th scope="col">Изменение</th>
@@ -42,7 +41,6 @@
         <th th:text="${user.getId()}" scope="row"></th>
         <td> <a th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user.getName()}+ ' ' +${user.getLastName()}"></a></td>
         <td th:text="${user.getAge()}"></td>
-        <td th:text="${user.getOccupation()}"></td>
         <td th:text="${user.getRegdate()}"></td>
         <td th:text="${user.getHaveLicense()}"></td>
         <td> <form th:action="'edit_user?id=' + ${user.getId()}" th:method="POST">

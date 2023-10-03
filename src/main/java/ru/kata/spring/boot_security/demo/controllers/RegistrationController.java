@@ -27,22 +27,22 @@ public class RegistrationController {
     private UserService userService;
 
 
-    @ModelAttribute("user")
+
+    @ModelAttribute("form")
     public RegistrationForm userRegistrationForm() {
         return new RegistrationForm();
     }
 
     @GetMapping
     public String getRegisterForm(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute("form", new RegistrationForm());
         return "registration";
     }
 
 
     @PostMapping
-    public String processRegistration(@Valid RegistrationForm form,  Errors errors) {
-        if (errors.hasErrors()) {
+    public String processRegistration(@ModelAttribute("form") @Valid RegistrationForm form,  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "registration";
         }
         userService.save(form);

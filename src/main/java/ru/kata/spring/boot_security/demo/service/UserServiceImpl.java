@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.model.RegistrationForm;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
     public void save(RegistrationForm form) {
         User newUser = form.toUser(passwordEncoder);
         newUser.setRegdate(formatter.format(LocalDateTime.now()));
+        newUser.setRoles(Arrays.asList(new Role("USER")));
         userRepository.save(newUser);
         logger.info("new user: " + newUser.getEmail());
     }

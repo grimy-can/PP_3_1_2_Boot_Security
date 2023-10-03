@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Builder
 public class User implements UserDetails {
 
@@ -38,9 +38,6 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "occupation")
-    private String occupation;
-
     @Column(name = "have_license")
     private Boolean haveLicense;
 
@@ -56,7 +53,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private Collection<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
