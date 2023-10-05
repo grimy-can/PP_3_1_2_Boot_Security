@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @Builder
 public class User implements UserDetails {
 
@@ -23,8 +23,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -38,8 +38,8 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "have_license")
-    private Boolean haveLicense;
+    @Column(name = "enabled")
+    private Boolean enabled;
 
     @Column(name = "regdate")
     private String regdate;
@@ -47,13 +47,12 @@ public class User implements UserDetails {
     @Column(name = "edited")
     private String edited;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Collection<Role> roles;
+            name="users_roles",
+            joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
+            inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

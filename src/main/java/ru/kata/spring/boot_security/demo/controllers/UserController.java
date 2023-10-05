@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,34 +20,23 @@ public class UserController {
 
     private UserService service;
 
-    @GetMapping(value = "/")
-    public String getIndex() {
+    @GetMapping
+    public String getIndex(Model model) {
+        model.addAttribute("localDateTime", LocalDateTime.now());
         return "index";
     }
 
 
-    @GetMapping(value = "/users")
-    public String getUsers(ModelMap model, @RequestParam(value = "count", required = false ) String number) {
+    @GetMapping(value = "/admin/users")
+    public String getUsers(ModelMap model) {
         model.addAttribute("users", service.getUsers());
         return "users";
     }
 
-//    @GetMapping("/new")
-//    public String getNewUserPage(Model model) {
-//        model.addAttribute("user", new User());
-//        model.addAttribute("localDateTime", LocalDateTime.now());
-//        return "new";
-//    }
-//    @PostMapping("/create")
-//    public String createUser(@ModelAttribute("user") User user) {
-//        service.addUser(user);
-//        return "redirect:/users";
-//}
 
-
-    @GetMapping("/users/{id}")
-    public String getUser(Model model, @PathVariable("id") int id) {
-        Optional<User> optionalUser = service.getUser(id);
+    @GetMapping("/admin/users/{id}")
+    public String getUser(Model model, @PathVariable("id") long id) {
+        Optional<User> optionalUser = service.getUserById(id);
         if (!optionalUser.isPresent()) {
             return "error";
         }
@@ -55,10 +45,21 @@ public class UserController {
     }
 
 
-    @PostMapping("/edit_user")
+    @GetMapping("/authenticated/user/{id}")
+    public String getUserPage(Model model, @PathVariable("id") long id) {
+        Optional<User> optionalUser = service.getUserById(id);
+        if (!optionalUser.isPresent()) {
+            return "error";
+        }
+        model.addAttribute("user", optionalUser.get());
+        return "user";
+    }
+
+
+    @PostMapping("/admin/edit_user")
     public String getEditUserPage(@RequestParam(value = "id") String id, Model model) {
 
-        Optional<User> optionalUser = service.getUser(Integer.valueOf(id));
+        Optional<User> optionalUser = service.getUserById(Long.valueOf(id));
         if (!optionalUser.isPresent()) {
             return "error";
         }
@@ -67,18 +68,18 @@ public class UserController {
         return "edit";
     }
 
-    @PostMapping("/update")
+    @PostMapping("/admin/update")
     public String updateUser(@ModelAttribute("user") User user) {
         service.updateUser(user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
 
-    @PostMapping("/del_user")
+    @PostMapping("/admin/del_user")
     public String deleteUser(@RequestParam(value = "id") String id) {
-        Optional<User> optionalUser = service.getUser(Integer.parseInt(id));
+        Optional<User> optionalUser = service.getUserById(Long.parseLong(id));
         service.deleteUser(optionalUser.get());
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
 }

@@ -27,7 +27,6 @@ public class RegistrationController {
     private UserService userService;
 
 
-
     @ModelAttribute("form")
     public RegistrationForm userRegistrationForm() {
         return new RegistrationForm();
@@ -35,6 +34,7 @@ public class RegistrationController {
 
     @GetMapping
     public String getRegisterForm(Model model) {
+        model.addAttribute("localDateTime", LocalDateTime.now());
         model.addAttribute("form", new RegistrationForm());
         return "registration";
     }
@@ -42,10 +42,16 @@ public class RegistrationController {
 
     @PostMapping
     public String processRegistration(@ModelAttribute("form") @Valid RegistrationForm form,  BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-        userService.save(form);
+        if (!userService.save(form)) {
+            bindingResult.rejectValue("email", null,
+                    "Email существует в базе данных");
+            return "registration";
+        }
+
         return "redirect:/registration?success";
     }
 

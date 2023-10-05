@@ -5,13 +5,15 @@ import ru.kata.spring.boot_security.demo.model.User;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface UserService {
 
-    void save(RegistrationForm form);
+    boolean save(RegistrationForm form);
 
     void updateUser(User user);
 
-    Optional<User> getUser(Integer id);
+    Optional<User> getUserById(Long id);
+
 
     void deleteUser(User user);
 

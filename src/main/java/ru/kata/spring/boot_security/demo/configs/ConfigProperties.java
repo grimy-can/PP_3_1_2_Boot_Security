@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import ru.kata.spring.boot_security.demo.util.FakeUserCreator;
+
 import java.time.format.DateTimeFormatter;
+
 
 
 @Data

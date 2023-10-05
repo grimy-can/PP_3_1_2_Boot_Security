@@ -13,7 +13,7 @@
     }
 </style>
 <body>
-<form th:method="POST" th:action="'update?id='+${user.getId()}" th:object="${user}">
+<form th:method="POST" th:action="'admin/update?id='+${user.getId()}" th:object="${user}">
     <div>
         <input type="text" name="name" th:value="${user.getName()}" th:required="required">
     </div>
@@ -21,7 +21,7 @@
         <input type="text" name="lastName" th:value="${user.getLastName()}" th:required="required">
     </div>
     <div>
-        <input type="text" name="email" th:value="${user.getEmail()}" th:required="required">
+        <input type="text" name="email" th:value="${user.getUsername()}" th:required="required">
     </div>
     <div>
         <input type="text" name="password" th:value="${user.getPassword}" th:required="required">
@@ -33,8 +33,8 @@
         <input type="text" name="regdate" th:value="${user.getRegdate()}" th:required="required" readonly>
     </div>
     <div>
-        <label>Есть права: </label>
-        <input type="checkbox" th:field="*{haveLicense}" id="haveLicense">
+        <label>Разрешённый профиль: </label>
+        <input type="checkbox" th:field="*{enabled}" id="enabled">
     </div>
     <br>
     <hr><input type="submit" value="Сохранить">

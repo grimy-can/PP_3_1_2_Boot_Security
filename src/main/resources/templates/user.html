@@ -7,14 +7,13 @@
 </head>
 <span style="color: #E0FFFF">
 <h2><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></h2>
-        <h4><p th:text="'E-mail: ' + ${user.getEmail()}">VALUE</p></h4>
+        <h4><p th:text="'E-mail: ' + ${user.getUsername()}">VALUE</p></h4>
         <h4><p th:text="'Пароль: ' + ${user.getPassword()}">VALUE</p></h4>
         <h4><p th:text="'Возраст: ' + ${user.getAge()}">VALUE</p></h4>
-        <h4><p th:text="'Есть права: ' + ${user.getHaveLicense()}">VALUE</p></h4>
         <h4><p th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</p></h4>
         <h4><p th:text="'Изменён: ' + ${user.getEdited()}">VALUE</p></h4>
         <hr>
-        <form th:action="@{/users}" th:method="GET">
+        <form th:action="@{/admin/users}" th:method="GET">
         <input type="submit" value="Назад" />
         </form>
     </span>
