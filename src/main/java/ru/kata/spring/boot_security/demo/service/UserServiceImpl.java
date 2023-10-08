@@ -4,14 +4,12 @@ package ru.kata.spring.boot_security.demo.service;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import ru.kata.spring.boot_security.demo.model.RegistrationForm;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -20,13 +18,9 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.util.FakeUserCreator;
 
 import javax.annotation.PostConstruct;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -50,7 +44,6 @@ public class UserServiceImpl implements UserDetailsService {
             creator.create();
         }
     }
-
 
     public boolean save(RegistrationForm form) {
         User newUser = form.toUser(passwordEncoder);
@@ -93,14 +86,13 @@ public class UserServiceImpl implements UserDetailsService {
         return user;
     }
 
-    public void updateUser(User user) {
-        UserDetails userDetails = loadUserByUsername(user.getUsername());
-        List<Role> roles = userDetails
-                .getAuthorities()
-                .stream()
-                .map(ud -> (roleRepository.findByName(ud.getAuthority()))).collect(Collectors.toList());
+    public void updateUser(User user, MultiValueMap<String, List<String>> roleOptions) {
+        List<Role> rolesList = new ArrayList<>();
+        for (Object role : roleOptions.get("options")) {
+            rolesList.add(roleRepository.findByName(role.toString()));
+        }
 
-        user.setRoles(roles);
+        user.setRoles(rolesList);
         user.setEdited(formatter.format(LocalDateTime.now()));
 
         userRepository.save(user);

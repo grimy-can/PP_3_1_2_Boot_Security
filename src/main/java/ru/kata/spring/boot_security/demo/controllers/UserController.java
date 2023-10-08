@@ -2,6 +2,8 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -16,6 +19,8 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -41,7 +46,8 @@ public class UserController {
 
 
     @GetMapping(value = "/admin/users")
-    public String getUsers(ModelMap model) {
+    public String getUsers(ModelMap model, Principal princip) {
+        model.addAttribute("princip", princip.getName());
         model.addAttribute("users", service.getUsers());
         model.addAttribute("localDateTime", LocalDateTime.now());
         return "users";
@@ -58,16 +64,18 @@ public class UserController {
 
 
     @PostMapping("/admin/edit_user")
-    public String getEditUserPage(@RequestParam(value = "id") String id, Model model) {
-        Optional<User> optionalUser = service.getUserById(Long.valueOf(id));
+    public String getEditUserPage(@RequestParam(value = "id") Long id, Model model) {
+        Optional<User> optionalUser = service.getUserById(id);
         model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute("roles", optionalUser.get().getAuthorities().toArray(new GrantedAuthority[2]));
         model.addAttribute("user", optionalUser.get());
         return "edit";
     }
 
     @PostMapping("/admin/update")
-    public String updateUser(@ModelAttribute("user") User user) {
-        service.updateUser(user);
+    public String updateUser(@ModelAttribute("user") User user,
+                             @RequestBody MultiValueMap<String,List<String>> roleOptions) {
+        service.updateUser(user, roleOptions);
         return "redirect:/admin/users";
     }
 

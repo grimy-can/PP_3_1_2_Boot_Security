@@ -65,6 +65,18 @@
         <div>
             <input type="text" name="edited" th:value="${user.getEdited()}" th:required="required" readonly>&ensp;&ensp;<label> Изменения</label>
         </div>
+
+        <tbody>
+                <div>
+                    <input type="checkbox" id="option1" name="options" value="ROLE_USER" th:checked="${roles[0]}" >
+                    <label for="option1">USER</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="option2" name="options" value="ROLE_ADMIN" th:checked="${roles[1]}">
+                    <label for="option2">ADMIN</label>
+                </div>
+            </tr>
+        </tbody>
         <br>
         <hr><input type="submit" value="Сохранить">
     </form>

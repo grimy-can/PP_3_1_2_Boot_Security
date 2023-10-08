@@ -36,13 +36,13 @@
 
 <body style="background-color: lemonchiffon;">
         <div style="margin-left:60px;">
-                <h2><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></h2>
+                <h2 th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></h2>
                 <hr>
-                <h4><p th:text="'E-mail: ' + ${user.getUsername()}">VALUE</p></h4>
-                <h4><p th:text="'Возраст: ' + ${user.getAge()}">VALUE</p></h4>
-                <h4><p th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</p></h4>
-                <h4><p th:text="'Изменение: ' + ${user.getEdited()}">VALUE</p></h4>
-                <h4><p th:text="'Пароль: ' + ${user.getPassword()}">VALUE</p></h4>
+                <h4 th:text="'E-mail: ' + ${user.getUsername()}">VALUE</h4>
+                <h4 th:text="'Возраст: ' + ${user.getAge()}">VALUE</h4>
+                <h4 th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</h4>
+                <h4 th:text="'Изменение: ' + ${user.getEdited()}">VALUE</h4>
+                <h4 th:text="'Пароль: ' + ${user.getPassword()}">VALUE</h4>
                 <hr>
 
         </div>
@@ -51,27 +51,27 @@
         <table style="width:20%" class="table table-bordered" >
                 <thead>
                 <tr style=" background-color:grey;" >
-                        <th scope="col" >USER</th>
-                        <th scope="col" >ADMIN</th>
+                        <th scope="col1" >РОЛИ</th>
+
                 </tr>
                 </thead>
+
                 <tbody>
-                <tr  th:block th:each="auth : ${user.getAuthorities()}" >
-                        <div  th:if="${auth.getAuthority()}=='ROLE_USER'" >
-                                <td th:text="enabled"></td>
-                        </div>
-                        <div th:if="${auth.getAuthority()}=='ROLE_ADMIN'">
-                                <td th:text="enabled"></td>
-                        </div>
+                <tr th:block th:each="auth : ${user.getAuthorities()}" >
+                        <td th:text="${auth.getAuthority()}"></td>
                 </tr>
                 </tbody>
         </table>
 </div>
 <div style="margin-left:60px;">
-        <td> <form th:action="'/admin/edit_user?id=' + ${user.getId()}" th:method="POST">
+        <form th:action="'/admin/edit_user?id=' + ${user.getId()}" th:method="POST">
                 <input type="submit" value="Изменить" />
-        </form></td>
-        </td>
+        </form>
+
+        <br>
+        <a href="/admin/users">
+                <button class="button">Отмена</button></a>
+
 
 </div>
 </html>

@@ -36,15 +36,13 @@
 
 <body style="background-color: lemonchiffon;">
 <div style="margin-left:60px;">
-    <h2><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></h2>
+    <h2 th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></h2>
     <hr>
-    <h4><p th:text="'E-mail: ' + ${user.getUsername()}">VALUE</p></h4>
-    <h4><p th:text="'Возраст: ' + ${user.getAge()}">VALUE</p></h4>
-    <h4><p th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</p></h4>
+    <h4 th:text="'E-mail: ' + ${user.getUsername()}">VALUE</h4>
+    <h4 th:text="'Возраст: ' + ${user.getAge()}">VALUE</h4>
+    <h4 th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</h4>
     <hr>
 
 </div>
-</body>
-
 </body>
 </html>
