@@ -14,6 +14,7 @@ import ru.kata.spring.boot_security.demo.model.RegistrationForm;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private UserService userService;
+    private UserServiceImpl userService;
 
 
     @ModelAttribute("form")

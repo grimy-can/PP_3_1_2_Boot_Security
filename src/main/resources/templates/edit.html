@@ -1,52 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
-        <head>
-        <meta charset="UTF-8">
-        <title>Изменить пользователя</title>
+    <title>User</title>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 </head>
+<style>
+    .navbar {
+        background-color: green;
+    }
+</style>
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand">ПРОФИЛЬ</a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand"><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="navbar-brand"  th:align="right" th:text="${#temporals.format(localDateTime, 'dd-MM-yyyy HH:mm')}"></a></li>
+        </ul>
+        <div class="nav navbar-nav navbar-right">
+            <ul class="navbar-brand"   th:align="center" >
+                <a href="javascript: document.logoutForm.submit()" role="menuitem">LOGOUT</a>
+                <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                    <input hidden type="submit" value="Sign Out"/>
+                </form>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br><br><br><br>
 <style>
     ::placeholder{
         color: coral;
     }
 </style>
 <body>
-<form th:method="POST" th:action="'admin/update?id='+${user.getId()}" th:object="${user}">
-    <div>
-        <input type="text" name="name" th:value="${user.getName()}" th:required="required">
-    </div>
-    <div>
-        <input type="text" name="lastName" th:value="${user.getLastName()}" th:required="required">
-    </div>
-    <div>
-        <input type="text" name="email" th:value="${user.getUsername()}" th:required="required">
-    </div>
-    <div>
-        <input type="text" name="password" th:value="${user.getPassword}" th:required="required">
-    </div>
-    <div>
-        <input type="text" name="age" th:value="${user.getAge()}" th:required="required">
-    </div>
-    <div>
-        <input type="text" name="regdate" th:value="${user.getRegdate()}" th:required="required" readonly>
-    </div>
-    <div>
-        <label>Разрешённый профиль: </label>
-        <input type="checkbox" th:field="*{enabled}" id="enabled">
-    </div>
+<div style="margin-left:60px;">
+    <form th:method="POST" th:action="'/admin/update?id='+${user.getId()}" th:object="${user}">
+        <div>
+            <input type="text" name="name" th:value="${user.getName()}" th:required="required">&ensp;&ensp;<label> Имя</label>
+        </div>
+        <div>
+            <input type="text" name="lastName" th:value="${user.getLastName()}" th:required="required">&ensp;&ensp;<label> Фамилия</label>
+        </div>
+        <div>
+            <input type="text" name="username" th:value="${user.getUsername()}" th:required="required">&ensp;&ensp;<label> Email</label>
+        </div>
+        <div>
+            <input type="text" name="password" th:value="${user.getPassword}" th:required="required">&ensp;&ensp;<label> Пароль</label>
+        </div>
+        <div>
+            <input type="text" name="age" th:value="${user.getAge()}" th:required="required">&ensp;&ensp;<label> Возраст</label>
+        </div>
+        <div>
+            <input type="text" name="regdate" th:value="${user.getRegdate()}" th:required="required" readonly>&ensp;&ensp;<label> Регистрация</label>
+        </div>
+        <div>
+            <input type="text" name="edited" th:value="${user.getEdited()}" th:required="required" readonly>&ensp;&ensp;<label> Изменения</label>
+        </div>
+        <br>
+        <hr><input type="submit" value="Сохранить">
+    </form>
     <br>
-    <hr><input type="submit" value="Сохранить">
-</form>
+    <a href="/admin/users">
+        <button class="button">Отмена</button></a>
+</div>
 <hr>
-<a href="/users">
-    <button class="button">Отмена</button>
-</a>
-</body>
-</html></title>
-</head>
-<body>
+
 
 </body>
 </html>

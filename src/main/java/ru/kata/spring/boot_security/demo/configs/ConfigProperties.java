@@ -5,10 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import ru.kata.spring.boot_security.demo.util.FakeUserCreator;
 
 import java.time.format.DateTimeFormatter;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Data
@@ -24,4 +29,16 @@ public class ConfigProperties {
         return  DateTimeFormatter.ofPattern(formatDateTime);
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    Map<String, String> getRoleTargetUrlMap() {
+        Map<String, String> roleTargetUrlMap = new HashMap<>();
+        roleTargetUrlMap.put("ROLE_ADMIN", "/admin/users");
+        roleTargetUrlMap.put("ROLE_USER", "/authenticated");
+        return roleTargetUrlMap;
+    }
 }

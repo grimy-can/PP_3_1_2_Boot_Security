@@ -4,7 +4,13 @@ package ru.kata.spring.boot_security.demo.service;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.model.RegistrationForm;
 import ru.kata.spring.boot_security.demo.model.Role;
@@ -14,6 +20,7 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.util.FakeUserCreator;
 
 import javax.annotation.PostConstruct;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -21,11 +28,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @PropertySource("classpath:application.properties")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserDetailsService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
     private DateTimeFormatter formatter;
     private final UserRepository userRepository;
@@ -43,7 +51,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
+
     public boolean save(RegistrationForm form) {
         User newUser = form.toUser(passwordEncoder);
         if (!userRepository.findByUsername(newUser.getUsername()).isPresent()) {
@@ -62,31 +70,48 @@ public class UserServiceImpl implements UserService {
         }
         logger.info("попытка повторной регистрации: " + newUser.getUsername());
         return false;
+    }
 
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public void updateUser(User user) {
-        user.setEdited(formatter.format(LocalDateTime.now()));
-        userRepository.save(user);
-        logger.info("updated: " + user.getUsername());
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = findUserByUsername(username);
+        if (!user.isPresent()) {
+            throw new  UsernameNotFoundException(String.format("user %s not found", user.get().getUsername()));
+        }
+        logger.info("founded: " + user.get().getUsername() + user.get().getAuthorities());
+        return new org.springframework.security.core.userdetails
+                .User(username, user.get().getPassword(), user.get().getAuthorities());
     }
 
-    @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
-        logger.info("deleted: " + user.getUsername());
-    }
-
-    @Override
     public Optional<User> getUserById(Long id) {
         Optional<User> user = Optional.ofNullable(userRepository.getOne(id));
         logger.info("founded: " + user.get().getUsername());
         return user;
     }
 
+    public void updateUser(User user) {
+        UserDetails userDetails = loadUserByUsername(user.getUsername());
+        List<Role> roles = userDetails
+                .getAuthorities()
+                .stream()
+                .map(ud -> (roleRepository.findByName(ud.getAuthority()))).collect(Collectors.toList());
 
-    @Override
+        user.setRoles(roles);
+        user.setEdited(formatter.format(LocalDateTime.now()));
+
+        userRepository.save(user);
+        logger.info("updated: " + user.getUsername());
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+        logger.info("deleted: " + user.getUsername());
+    }
+
     public List<User> getUsers() {
         List<User> list = userRepository.findAll();
         logger.info("founded: " + list.size());

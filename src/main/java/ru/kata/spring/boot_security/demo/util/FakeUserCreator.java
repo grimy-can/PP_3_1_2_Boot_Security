@@ -28,6 +28,7 @@ public class FakeUserCreator {
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder, UserRepository userRepository,
                            int usersNumber) {
+
         this.formatter = formatter;
         this.userService = service;
         this.roleRepository = roleRepository;
@@ -50,6 +51,7 @@ public class FakeUserCreator {
     }
 
     private RegistrationForm getRegistrationForm() {
+
         String firstName = getRandomName();
         String lastName = getRandomName();
         String username = String.format("%s%s@mail.ru", firstName, lastName).toLowerCase();
@@ -57,12 +59,13 @@ public class FakeUserCreator {
         userForm.setName(firstName);
         userForm.setLastName(lastName);
         userForm.setUsername(username);
-        userForm.setPassword(String.valueOf(username.hashCode()));
-        userForm.setAge(username.length() * 3);
+        userForm.setPassword("user");
+        userForm.setAge(username.length() * 2);
         return userForm;
     }
 
     public String getRandomName() {
+
         StringBuilder builder = new StringBuilder();
         while(builder.toString().length() == 0) {
             int length = rand.nextInt(5) + 5;

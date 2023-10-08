@@ -1,22 +1,77 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
-<meta charset="UTF-8">
-<body style="background-color: #1C1C1C;">
+<html>
 <head>
-    <title>Пользователь</title>
-</head>
-<span style="color: #E0FFFF">
-<h2><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></h2>
-        <h4><p th:text="'E-mail: ' + ${user.getUsername()}">VALUE</p></h4>
-        <h4><p th:text="'Пароль: ' + ${user.getPassword()}">VALUE</p></h4>
-        <h4><p th:text="'Возраст: ' + ${user.getAge()}">VALUE</p></h4>
-        <h4><p th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</p></h4>
-        <h4><p th:text="'Изменён: ' + ${user.getEdited()}">VALUE</p></h4>
-        <hr>
-        <form th:action="@{/admin/users}" th:method="GET">
-        <input type="submit" value="Назад" />
-        </form>
-    </span>
-</body>
+        <meta charset="UTF-8">
+        <title>User</title>
 
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<style>
+        .navbar {
+                background-color: green;
+        }
+</style>
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+                <div class="navbar-header">
+                        <a class="navbar-brand">ПРОФИЛЬ</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a class="navbar-brand"  th:align="right" th:text="${#temporals.format(localDateTime, 'dd-MM-yyyy HH:mm')}"></a></li>
+                </ul>
+                <div class="nav navbar-nav navbar-right">
+                        <ul class="navbar-brand"   th:align="center" >
+                                <a href="javascript: document.logoutForm.submit()" role="menuitem">LOGOUT</a>
+                                <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                                        <input hidden type="submit" value="Sign Out"/>
+                                </form>
+                        </ul>
+                </div>
+        </div>
+</nav>
+<br><br><br>
+
+<body style="background-color: lemonchiffon;">
+        <div style="margin-left:60px;">
+                <h2><p th:text="${user.getName()}+ ' '+ ${user.getLastName()}"></p></h2>
+                <hr>
+                <h4><p th:text="'E-mail: ' + ${user.getUsername()}">VALUE</p></h4>
+                <h4><p th:text="'Возраст: ' + ${user.getAge()}">VALUE</p></h4>
+                <h4><p th:text="'Регистрация: ' + ${user.getRegdate()}">VALUE</p></h4>
+                <h4><p th:text="'Изменение: ' + ${user.getEdited()}">VALUE</p></h4>
+                <h4><p th:text="'Пароль: ' + ${user.getPassword()}">VALUE</p></h4>
+                <hr>
+
+        </div>
+</body>
+<div style="margin-left:60px;" >
+        <table style="width:20%" class="table table-bordered" >
+                <thead>
+                <tr style=" background-color:grey;" >
+                        <th scope="col" >USER</th>
+                        <th scope="col" >ADMIN</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr  th:block th:each="auth : ${user.getAuthorities()}" >
+                        <div  th:if="${auth.getAuthority()}=='ROLE_USER'" >
+                                <td th:text="enabled"></td>
+                        </div>
+                        <div th:if="${auth.getAuthority()}=='ROLE_ADMIN'">
+                                <td th:text="enabled"></td>
+                        </div>
+                </tr>
+                </tbody>
+        </table>
+</div>
+<div style="margin-left:60px;">
+        <td> <form th:action="'/admin/edit_user?id=' + ${user.getId()}" th:method="POST">
+                <input type="submit" value="Изменить" />
+        </form></td>
+        </td>
+
+</div>
 </html>

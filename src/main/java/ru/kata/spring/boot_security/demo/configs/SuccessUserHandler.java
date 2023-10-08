@@ -22,6 +22,12 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
     private static final Logger logger = Logger.getLogger(SuccessUserHandler.class.getName());
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+    private final Map<String, String> roleTargetUrlMap;
+
+    public SuccessUserHandler(Map<String, String> roleTargetUrlMap) {
+        this.roleTargetUrlMap = roleTargetUrlMap;
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
@@ -44,24 +50,20 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
             logger.info(String.format("Unable to redirect to %s", targetUrl));
             return;
         }
-
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 
-    protected String determineTargetUrl(final Authentication authentication) {
+    protected String determineTargetUrl(final Authentication auth) {
 
-        Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_ADMIN", "/admin/users");
-        roleTargetUrlMap.put("ROLE_USER", "/authenticated/user");
+        logger.info(String.format("authenticated %s with %s", auth.getName(), auth.getAuthorities()));
 
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        final Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
             if(roleTargetUrlMap.containsKey(authorityName)) {
                 return roleTargetUrlMap.get(authorityName);
             }
         }
-
         throw new IllegalStateException();
     }
 

@@ -17,11 +17,6 @@
         padding: 10px;
         text-align: left;
     }
-    .button {
-        background-color: black;
-        color: lemonchiffon;
-        font-size: 16px;
-    }
     .navbar {
         background-color: green;
     }
@@ -29,12 +24,17 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand">База данных pre-project</a>
+            <a class="navbar-brand">БАЗА ДАННЫХ</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav" >
-                <li sec:authorize="isAuthenticated()"><a th:href="'/login?logout'">Logout</a>
-                </li>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="navbar-brand"  th:align="right" th:text="${#temporals.format(localDateTime, 'dd-MM-yyyy HH:mm')}"></a></li>
+        </ul>
+        <div class="nav navbar-nav navbar-right">
+            <ul class="navbar-brand"   th:align="center" >
+                <a href="javascript: document.logoutForm.submit()" role="menuitem">LOGOUT</a>
+                <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                    <input hidden type="submit" value="Sign Out"/>
+                </form>
             </ul>
         </div>
     </div>
@@ -50,25 +50,25 @@
         <th scope="col">Email</th>
         <th scope="col">Возраст</th>
         <th scope="col">Регистрация</th>
-        <th scope="col">Корректировка</th>
-        <th scope="col">Разрешён</th>
-        <th scope="col">Изменение</th>
-        <th scope="col">Удаление</th>
+        <th scope="col">Изменён</th>
+        <th scope="col">Компетенция</th>
+        <th scope="col">Изменить</th>
+        <th scope="col">Удалить</th>
     </tr>
     </thead>
     <tbody>
     <tr th:block th:each="user : ${users}">
         <th th:text="${user.getId()}" scope="row"></th>
-        <td> <a th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user.getName()}+ ' ' +${user.getLastName()}"></a></td>
+        <td> <a th:href="@{/admin/users/{id}(id=${user.getId()})}" th:text="${user.getName()}+ ' ' +${user.getLastName()}"></a></td>
         <td th:text="${user.getUsername()}"></td>
         <td th:text="${user.getAge()}"></td>
         <td th:text="${user.getRegdate()}"></td>
         <td th:text="${user.getEdited()}"></td>
-        <td th:text="${user.getEnabled()}"></td>
-        <td> <form th:action="'edit_user?id=' + ${user.getId()}" th:method="POST">
+        <td th:text="${user.getAuthorities()}"></td>
+        <td> <form th:action="'/admin/edit_user?id=' + ${user.getId()}" th:method="POST">
             <input type="submit" value="Изменить" />
         </form></td>
-        <td> <form th:action="'/admin/users/del_user?id=' + ${user.getId()}" th:method="POST">
+        <td> <form th:action="'/admin/del_user?id=' + ${user.getId()}" th:method="POST">
             <input type="submit" value="Удалить" />
         </form></td>
     </tr>

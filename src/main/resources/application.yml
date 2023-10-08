@@ -13,6 +13,6 @@ spring:
     properties:
       dialect: org.hibernate.dialect.MySQL5Dialect
       format_sql: true
-    show-sql: true
+    show-sql: false
   main:
     web-application-type: servlet

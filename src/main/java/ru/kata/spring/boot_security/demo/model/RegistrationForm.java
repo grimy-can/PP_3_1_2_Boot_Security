@@ -8,16 +8,17 @@ import javax.validation.constraints.*;
 @Data
 public class RegistrationForm {
 
+    @NotNull
     @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String username;
-
+    @NotNull
     @Size(min=8, max=32)
     private String password;
 
-
+    @NotNull
     private String name;
 
-
+    @NotNull
     private String lastName;
 
     @NotNull
@@ -32,7 +33,6 @@ public class RegistrationForm {
         newUser.setName(name);
         newUser.setLastName(lastName);
         newUser.setAge(age);
-        newUser.setEnabled(true);
         return newUser;
     }
 }
