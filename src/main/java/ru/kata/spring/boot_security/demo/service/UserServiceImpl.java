@@ -16,13 +16,12 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.util.FakeUserCreator;
-
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -38,9 +37,10 @@ public class UserServiceImpl implements UserDetailsService {
 
     @PostConstruct
     public void createFakeUsers() {
-        if ( Boolean.parseBoolean(environment.getProperty("fake-users.creator.enabled"))) {
-            int number = Integer.parseInt(Objects.requireNonNull(environment.getProperty("fake-users.creator.number")));
-            FakeUserCreator creator = new FakeUserCreator(formatter, this, roleRepository, passwordEncoder, userRepository, number);
+        if (Boolean.parseBoolean(environment.getProperty("fake-users.creator.enabled"))) {
+            FakeUserCreator creator = new FakeUserCreator(
+                    formatter, this, roleRepository,
+                    passwordEncoder, userRepository, environment);
             creator.create();
         }
     }
@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserDetailsService {
         if (!userRepository.findByUsername(newUser.getUsername()).isPresent()) {
 
             Role role = roleRepository.findByName("ROLE_USER");
-
             if(role == null) {
                 role = getUserRole();
                 newUser.setRoles(Arrays.asList(role));

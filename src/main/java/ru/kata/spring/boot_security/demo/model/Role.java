@@ -4,9 +4,9 @@ package ru.kata.spring.boot_security.demo.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor

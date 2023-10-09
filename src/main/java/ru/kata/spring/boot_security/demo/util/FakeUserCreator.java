@@ -1,5 +1,8 @@
 package ru.kata.spring.boot_security.demo.util;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.RegistrationForm;
@@ -11,43 +14,55 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Logger;
 
+
+@PropertySource("classpath:application.properties")
 public class FakeUserCreator {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
-    final String lexicon = "abcdefghijklmnopqrstuvwxyz";
-    final java.util.Random rand = new java.util.Random();
+    private String lexicon;
+    private int usersNumber;
+    private final java.util.Random rand = new java.util.Random();
     private final DateTimeFormatter formatter;
     private final UserServiceImpl userService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    int UsersNumber;
+    private Environment environment;
 
-    public FakeUserCreator(DateTimeFormatter formatter, UserServiceImpl service,
-                           RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder, UserRepository userRepository,
-                           int usersNumber) {
+    @Value("${base.module.elementToSearch}")
+    private String[] elementToSearch;
 
+
+    public FakeUserCreator(DateTimeFormatter formatter, UserServiceImpl service, RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder, UserRepository userRepository, Environment environment) {
         this.formatter = formatter;
         this.userService = service;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        UsersNumber = usersNumber;
+        this.environment = environment;
     }
 
     @Transactional
     public void create() {
 
-        createUserRoleIfNotFound();
-        createAdminRoleIfNotFound();
+        lexicon = environment.getProperty("fake-users.creator.lexicon");
+        usersNumber = Integer.parseInt(Objects.requireNonNull(environment.getProperty("fake-users.creator.number")));
 
-        for (int i = 0; i < this.UsersNumber; i++ ) {
+        createRolesIfNotFound();
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < this.usersNumber; i++ ) {
             RegistrationForm userForm = getRegistrationForm();
             userService.save(userForm);
         }
-        logger.info(String.format("создано фейк-юзеров: %s",  this.UsersNumber));
+        long finish = System.currentTimeMillis();
+
+        logger.info(String.format("создано фейк-юзеров: %s",  this.usersNumber));
+        logger.info(String.format("создание одного занимает: %s мс.",  (finish - start) / usersNumber));
+        createAdminIfNotFound();
     }
 
     private RegistrationForm getRegistrationForm() {
@@ -77,31 +92,35 @@ public class FakeUserCreator {
     }
 
 
-    public void createUserRoleIfNotFound() {
-
-        Role role = roleRepository.findByName("ROLE_USER");
-        if (role == null) {
-            role = new Role("ROLE_USER");
-            roleRepository.save(role);
+    public void createRolesIfNotFound() {
+        String[] roleList = environment.getProperty("fake-users.creator.roles", String[].class);
+        System.out.println("createRolesIfNotFound " + roleList);
+        for (String roleName : roleList) {
+            Role role = roleRepository.findByName(roleName);
+            if (role == null) {
+                role = new Role(roleName);
+                roleRepository.save(role);
+            }
         }
     }
 
-    public void createAdminRoleIfNotFound() {
-
-        Role role = roleRepository.findByName("ROLE_ADMIN");
-        if (role == null) {
-            role = new Role("ROLE_ADMIN");
-            roleRepository.save(role);
+    public void createAdminIfNotFound() {
+        String username = environment.getProperty("fake-users.creator.admin.username");
+        Optional<User> admin = userRepository.findByUsername(username);
+        if(admin.isEmpty()) {
+            String password = environment.getProperty("fake-users.creator.admin.password");
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN");
             RegistrationForm adminForm = new RegistrationForm();
-            adminForm.setUsername("admin@gmail.com");
-            adminForm.setPassword("admin");
+            adminForm.setUsername(username);
+            adminForm.setPassword(password);
             adminForm.setName("Admin");
-            adminForm.setLastName("Admin");
+            adminForm.setLastName("Temp");
             adminForm.setAge(100);
-            User admin = adminForm.toUser(passwordEncoder);
-            admin.setRoles(Arrays.asList(role));
-            admin.setRegdate(formatter.format(LocalDateTime.now()));
-            userRepository.save(admin);
+            User initAdmin = adminForm.toUser(passwordEncoder);
+            initAdmin.setRoles(Arrays.asList(adminRole));
+            initAdmin.setRegdate(formatter.format(LocalDateTime.now()));
+            userRepository.save(initAdmin);
+            logger.info(String.format("admin username: %s, admin password: %s",  username, password));
         }
     }
 }
