@@ -49,7 +49,8 @@ public class UserController {
 
     @GetMapping(value = "/admin/users")
     public String getUsers(ModelMap model, Principal principal) {
-        model.addAttribute("princip", principal.getName());
+        Optional<User> admin = service.findUserByUsername(principal.getName());
+        model.addAttribute("admin", admin.get());;
         model.addAttribute("users", service.getUsers());
         model.addAttribute(DATE_TIME, LocalDateTime.now());
         return "users";
