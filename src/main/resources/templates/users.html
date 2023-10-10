@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.
-             org/thymeleaf-extras-springsecurity3">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
@@ -27,7 +26,7 @@
             <a class="navbar-brand">Администратор: </a>
         </div>
         <div class="navbar-header">
-            <a class="navbar-brand" th:text="${princip}"></a>
+            <a class="navbar-brand" th:text="${principal}"></a>
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a class="navbar-brand"  th:align="right" th:text="${#temporals.format(localDateTime, 'dd-MM-yyyy HH:mm')}"></a></li>

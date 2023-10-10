@@ -21,27 +21,37 @@ import java.util.Optional;
 @RequestMapping("/")
 public class UserController {
 
+    private static final String DATE_TIME = "localDateTime";
     private UserServiceImpl service;
+
 
     @GetMapping
     public String getIndex(Model model) {
-        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute(DATE_TIME, LocalDateTime.now());
         return "index";
+    }
+    @GetMapping("/hello")
+    public String getHello(Model model) {
+        model.addAttribute(DATE_TIME, LocalDateTime.now());
+        return "hello";
     }
 
     @GetMapping("/authenticated")
     public String getUserPage(Model model, Principal principal) {
         Optional<User> user = service.findUserByUsername(principal.getName());
-        model.addAttribute("user", user.get());
-        return "profile";
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+            return "profile";
+        }
+        else return "login";
     }
 
 
     @GetMapping(value = "/admin/users")
-    public String getUsers(ModelMap model, Principal princip) {
-        model.addAttribute("princip", princip.getName());
+    public String getUsers(ModelMap model, Principal principal) {
+        model.addAttribute("princip", principal.getName());
         model.addAttribute("users", service.getUsers());
-        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute(DATE_TIME, LocalDateTime.now());
         return "users";
     }
 
@@ -50,7 +60,7 @@ public class UserController {
     public String getUser(Model model, @PathVariable("id") long id) {
         Optional<User> optionalUser = service.getUserById(id);
         model.addAttribute("user", optionalUser.get());
-        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute(DATE_TIME, LocalDateTime.now());
         return "user";
     }
 
@@ -58,7 +68,7 @@ public class UserController {
     @PostMapping("/admin/edit_user")
     public String getEditUserPage(@RequestParam(value = "id") Long id, Model model) {
         Optional<User> optionalUser = service.getUserById(id);
-        model.addAttribute("localDateTime", LocalDateTime.now());
+        model.addAttribute(DATE_TIME, LocalDateTime.now());
         model.addAttribute("roles", optionalUser.get().getAuthorities().toArray(new GrantedAuthority[2]));
         model.addAttribute("user", optionalUser.get());
         return "edit";

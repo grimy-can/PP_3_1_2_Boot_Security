@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.configs;
 
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,7 +17,7 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
     private final PasswordEncoder passwordEncoder;
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
 
     public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImpl userService, PasswordEncoder passwordEncoder) {
         this.successUserHandler = successUserHandler;
@@ -28,7 +29,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
                 .authorizeRequests()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .antMatchers("/hello/**").permitAll()
                 .antMatchers("/authenticated/**").authenticated()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .and()
