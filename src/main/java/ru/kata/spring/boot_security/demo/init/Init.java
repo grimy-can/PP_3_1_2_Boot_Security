@@ -1,9 +1,9 @@
-package ru.kata.spring.boot_security.demo.util;
+package ru.kata.spring.boot_security.demo.init;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.RegistrationForm;
 import ru.kata.spring.boot_security.demo.model.Role;
@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -19,9 +20,10 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 
+@Component
 @PropertySource("classpath:application.properties")
-public class FakeUserCreator {
-    private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
+public class Init {
+    private static final Logger logger = Logger.getLogger(Init.class.getName());
     private String lexicon;
     private int usersNumber;
     private final java.util.Random rand = new java.util.Random();
@@ -32,18 +34,34 @@ public class FakeUserCreator {
     private final UserRepository userRepository;
     private Environment environment;
 
-    @Value("${base.module.elementToSearch}")
-    private String[] elementToSearch;
 
-
-    public FakeUserCreator(DateTimeFormatter formatter, UserServiceImpl service, RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder, UserRepository userRepository, Environment environment) {
+    public Init(DateTimeFormatter formatter,
+                UserServiceImpl service,
+                RoleRepository roleRepository,
+                PasswordEncoder passwordEncoder,
+                UserRepository userRepository,
+                Environment environment) {
         this.formatter = formatter;
         this.userService = service;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.environment = environment;
+    }
+
+
+    @PostConstruct
+    public void createFakeUsers() {
+        if (Boolean.parseBoolean(environment.getProperty("fake-users.creator.enabled"))) {
+            Init creator = new Init(
+                    formatter,
+                    userService,
+                    roleRepository,
+                    passwordEncoder,
+                    userRepository,
+                    environment);
+            creator.create();
+        }
     }
 
     @Transactional

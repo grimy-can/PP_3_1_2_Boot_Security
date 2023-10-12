@@ -27,6 +27,7 @@ public class RegistrationController {
         return new RegistrationForm();
     }
 
+
     @GetMapping
     public String getRegisterForm(Model model) {
         model.addAttribute("localDateTime", LocalDateTime.now());
@@ -36,7 +37,8 @@ public class RegistrationController {
 
 
     @PostMapping
-    public String processRegistration(@ModelAttribute("form") @Valid RegistrationForm form,  BindingResult bindingResult) {
+    public String processRegistration(@ModelAttribute("form") @Valid RegistrationForm form,
+                                      BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "registration";
@@ -46,8 +48,6 @@ public class RegistrationController {
                     "Email существует в базе данных");
             return "registration";
         }
-
         return "redirect:/registration?success";
     }
-
 }

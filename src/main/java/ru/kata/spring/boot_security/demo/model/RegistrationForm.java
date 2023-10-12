@@ -11,6 +11,7 @@ public class RegistrationForm {
     @NotNull
     @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String username;
+
     @NotNull
     @Size(min=8, max=32)
     private String password;

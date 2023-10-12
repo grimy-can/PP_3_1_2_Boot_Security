@@ -46,12 +46,9 @@ public class User implements UserDetails {
     @Column(name = "edited")
     private String edited;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
-    @JoinTable(
-            name="users_roles",
-            joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
+    @ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+    @JoinTable(name="users_roles", joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
-
     private List<Role> roles = new ArrayList<>();
 
     @Override
