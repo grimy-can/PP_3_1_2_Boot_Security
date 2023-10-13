@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.RegistrationForm;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import java.security.Principal;
@@ -26,7 +27,8 @@ public class AdminController {
     @GetMapping(value = "/users")
     public String getUsers(ModelMap model, Principal principal) {
         Optional<User> admin = service.findUserByUsername(principal.getName());
-        model.addAttribute("admin", admin.get());;
+        model.addAttribute("admin", admin.get());
+        model.addAttribute("form", new RegistrationForm());
         model.addAttribute("users", service.getUsers());
         model.addAttribute(DATE_TIME, LocalDateTime.now());
         return "users";

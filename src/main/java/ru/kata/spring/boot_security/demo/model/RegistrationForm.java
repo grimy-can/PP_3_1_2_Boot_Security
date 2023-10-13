@@ -10,7 +10,7 @@ public class RegistrationForm {
 
     @NotNull
     @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
-    private String username;
+    private String email;
 
     @NotNull
     @Size(min=8, max=32)
@@ -26,10 +26,12 @@ public class RegistrationForm {
     @Min(value = 18, message = "18+")
     private int age;
 
+    @NotNull
+    private String role;
 
     public User toUser(PasswordEncoder passwordEncoder) {
         User newUser = new User();
-        newUser.setUsername(username);
+        newUser.setUsername(email);
         newUser.setPassword(passwordEncoder.encode(password));
         newUser.setName(name);
         newUser.setLastName(lastName);

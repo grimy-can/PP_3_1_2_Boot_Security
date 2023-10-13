@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,9 +13,7 @@
     <link href="/static/css/main.css" rel="stylesheet">
 
 </head>
-
 <body>
-
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <div class="navbar-nav px-3" >
         <a class="navbar-brand" th:text="${admin.getUsername()}+' with roles: '+${admin.getAuthorities()} ">with roles:</a>
@@ -24,7 +22,7 @@
         <ul class="navbar-brand" >
             <a href="javascript: document.logoutForm.submit()" role="menuitem">LOGOUT</a>
             <form name="logoutForm" th:action="@{/logout}" method="post" >
-                <input hidden type="submit" value="Sign Out"/>
+                <input hidden type="submit"/>
             </form>
         </ul>
     </ul>
@@ -33,24 +31,44 @@
     <div class="row">
         <nav class="col-md-2 sidebar">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-admin" role="tab" aria-controls="v-pills-admin" aria-selected="true">Admin</a>
-                <a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
+                <a class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-admin" role="tab"
+                   aria-controls="v-pills-admin" aria-selected="true">Admin</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab"
+                   aria-controls="v-pills-profile" aria-selected="false">User</a>
+            </div>
+            <div th:if="${new_user != null}">
+                <div th:if="${new_user == 'error'}">
+                    <div class="alert alert-info alert-dismissible fade show">
+                        <strong>Ошибка!</strong>Данные нового пользователя не отвечают требованиям
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+                <div th:if="${new_user != 'error'}">
+                    <div class="alert alert-info alert-dismissible fade show">
+                        <strong>Новый пользователь: </strong> <a th:text="${new_user}" />
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
             </div>
         </nav>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 ">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-admin" role="tabpanel" aria-labelledby="v-pills-admin-tab">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
-                        <h1 class="h2">Admin panel</h1>
+                        <h1 class="h3">Admin panel</h1>
                     </div>
                     <nav class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-link active" id="nav-users-tab" data-bs-toggle="tab" href="#nav-users" role="tab" aria-controls="nav-users" aria-selected="true">Users table</a>
-                        <a class="nav-link" id="nav-new-tab" data-bs-toggle="tab" href="#nav-new" role="tab" aria-controls="nav-new" aria-selected="false">New user</a>
-                        <a class="nav-link" id="nav-temp-tab" data-bs-toggle="tab" href="#nav-temp" role="tab" aria-controls="nav-temp" aria-selected="false">Screenshots</a>
+                        <a class="nav-link active" id="nav-users-tab" data-bs-toggle="tab" href="#nav-users" role="tab"
+                           aria-controls="nav-users" aria-selected="true">Users table</a>
+                        <a class="nav-link" id="nav-new-tab" data-bs-toggle="tab" href="#nav-new" role="tab"
+                           aria-controls="nav-new" aria-selected="false">New user</a>
+                        <a class="nav-link" id="nav-temp-tab" data-bs-toggle="tab" href="#nav-temp" role="tab"
+                           aria-controls="nav-temp" aria-selected="false">Screenshots</a>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-users" role="tabpanel" aria-labelledby="nav-users-tab">
                             <h4 class="h5">All users</h4>
+                            <!--ALL USERS TABLE-->
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
@@ -90,6 +108,52 @@
                         </div>
                         <div class="tab-pane fade" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab">
                             <h4 class="h5">Add new user</h4>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="card text-center start-100">
+                                        <form action="#" th:action="@{/registration}" method="POST"  th:object="${form}">
+                                            <div>
+                                                <label for="name" class="form-label fw-bold">First Name</label>
+                                                <input type="text" class="form-control form-control-sm" id="name"
+                                                       th:field="*{name}" required>
+                                            </div>
+                                            <div>
+                                                <label for="lastName" class="form-label fw-bold">Last Name</label>
+                                                <input type="text" class="form-control form-control-sm" id="lastName"
+                                                       th:field="*{lastName}" required>
+                                            </div>
+                                            <div>
+                                                <label for="age" class="form-label fw-bold">Age</label>
+                                                <input type="number" class="form-control form-control-sm" id="age"
+                                                       th:field="*{age}" required>
+                                                <span class="validation-error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+                                            </div>
+                                            <div>
+                                                <label for="email" class="form-label fw-bold">Email address</label>
+                                                <input type="email" class="form-control form-control-sm" id="email"
+                                                       th:field="*{email}" required>
+                                                <span class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                            </div>
+                                            <div>
+                                                <label for="password" class="form-label fw-bold">Password</label>
+                                                <input type="password" class="form-control form-control-sm" id="password"
+                                                       th:field="*{password}" required>
+                                                <span class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                                            </div>
+                                            <div>
+                                                <label for="role" class="form-label fw-bold">Role</label>
+                                                <select class="form-select" size="2" multiple aria-label="multiple select example"
+                                                        th:field="*{role}" id="role" required>
+                                                    <option value="1">USER</option>
+                                                    <option value="2">ADMIN</option>
+                                                </select>
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary">Add new user</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="nav-temp" role="tabpanel" aria-labelledby="nav-temp-tab">
                                 <div style="text-align: center;">
@@ -102,6 +166,7 @@
                 </div>
                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                     <h1 class="h2">User information-page</h1>
+                    <!-- admin information-page-->
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -131,7 +196,7 @@
                             </form></td>
                             <td> <form th:action="'/admin/del_user?id=' + ${admin.getId()}" th:method="POST">
                                 <div>
-                                    <button class="btn btn-danger" type="submit" th:disabled="true">Delete</button>
+                                    <button class="btn btn-danger" type="submit">Delete</button>
                                 </div>
                             </form></td>
                         </tr>

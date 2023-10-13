@@ -91,7 +91,7 @@ public class Init {
         RegistrationForm userForm = new RegistrationForm();
         userForm.setName(firstName);
         userForm.setLastName(lastName);
-        userForm.setUsername(username);
+        userForm.setEmail(username);
         userForm.setPassword("user");
         userForm.setAge(username.length() * 2);
         return userForm;
@@ -129,7 +129,7 @@ public class Init {
             String password = environment.getProperty("fake-users.creator.admin.password");
             Role adminRole = roleRepository.findByName("ROLE_ADMIN");
             RegistrationForm adminForm = new RegistrationForm();
-            adminForm.setUsername(username);
+            adminForm.setEmail(username);
             adminForm.setPassword(password);
             adminForm.setName("Admin");
             adminForm.setLastName("Temp");

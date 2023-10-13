@@ -3,15 +3,19 @@ package ru.kata.spring.boot_security.demo.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.RegistrationForm;
+import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Controller
@@ -28,26 +32,28 @@ public class RegistrationController {
     }
 
 
-    @GetMapping
-    public String getRegisterForm(Model model) {
-        model.addAttribute("localDateTime", LocalDateTime.now());
-        model.addAttribute("form", new RegistrationForm());
-        return "registration";
-    }
-
-
     @PostMapping
     public String processRegistration(@ModelAttribute("form") @Valid RegistrationForm form,
-                                      BindingResult bindingResult) {
+                                      BindingResult result,
+                                      Principal principal,
+                                      ModelMap model) {
 
-        if (bindingResult.hasErrors()) {
-            return "registration";
+        Optional<User> admin = userService.findUserByUsername(principal.getName());
+        model.addAttribute("admin", admin.get());
+
+        if (result.hasErrors()) {
+            model.addAttribute("new_user", "error");
+            model.addAttribute("users", userService.getUsers());
+            return "users";
         }
         if (!userService.save(form)) {
-            bindingResult.rejectValue("email", null,
-                    "Email существует в базе данных");
-            return "registration";
+            model.addAttribute("new_user", "error");
+            result.rejectValue("email", null, "Email exist");
+            model.addAttribute("users", userService.getUsers());
+            return "users";
         }
-        return "redirect:/registration?success";
+        model.addAttribute("new_user", form.getEmail());
+        model.addAttribute("users", userService.getUsers());
+        return "users";
     }
 }
